@@ -1,8 +1,8 @@
-# docker build -t yehudagav/threat-api:v1 .
+# docker build -t yehudagav/threat-api:v1/v2 .
 
 # docker login
 
-# docker push yehudagav/threat-api:v1
+# docker push yehudagav/threat-api:v1/v2
 
 
 # oc apply -f k8s/mongo-service.yaml
@@ -20,4 +20,3 @@
 
 # oc get route threat-api-svc
 
-# oc get all
