@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: docker.io/library/mongo:7
+    container_name: threat-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secretpass
+      MONGO_INITDB_DATABASE: threat_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - threat-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/threat_db --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: threat-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      MONGO_HOST: mongo
+      MONGO_PORT: 27017
+      MONGO_USERNAME: admin
+      MONGO_PASSWORD: secretpass
+      MONGO_DB: threat_db
+      MONGO_AUTH_SOURCE: admin
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - threat-network
+    volumes:
+      - ./terrorists_data.csv:/app/terrorists_data.csv:ro
+
+volumes:
+  mongo_data:
+    driver: local
+
+networks:
+  threat-network:
+    driver: bridge
