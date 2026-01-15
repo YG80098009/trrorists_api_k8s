@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: threat-api
-        image: docker.io/yehudagav/threat-api:v1 
+        image: docker.io/yehudagav/threat-api:v2
         ports:
         - containerPort: 8000
         env:
