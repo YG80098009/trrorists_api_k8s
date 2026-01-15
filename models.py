@@ -8,4 +8,3 @@ class Threat(BaseModel):
 class ResponseThreat(BaseModel):
     count: int
     top: list[Threat]
- d =ResponseThreat().model_dump_json
